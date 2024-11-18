@@ -1,0 +1,548 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@;0,300;0,400;0,500;0,700;0,800&display=swap");
+* {
+  font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /*   Color   */
+  --body-color: #e4e9f7;
+  --sidebar-color: #fff;
+  --primary-color: #695cfe;
+  --primary-color-light: #f6f5ff;
+  --toggle-color: #dddd;
+  --text-color: #707070;
+
+  /*  Transition   */
+  --tran-02: all 0.2s ease;
+  --tran-03: all 0.3s ease;
+  --tran-04: all 0.4s ease;
+  --tran-05: all 0.5s ease;
+}
+
+body {
+  height: 100vh;
+  background: var(--body-color);
+  transition: var(--tran-05);
+}
+
+body.dark {
+  --body-color: #18191a;
+  --sidebar-color: #242526;
+  --primary-color: #3a3b3c;
+  --primary-color-light: #3a3b3c;
+  --toggle-color: #fff;
+  --text-color: #ccc;
+}
+
+/* Sidebar */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 250px;
+  padding: 10px 14px;
+  background: var(--sidebar-color);
+  transition: var(--tran-05);
+  z-index: 100;
+}
+
+.sidebar.close {
+  width: 88px;
+}
+
+/*  Resuable  */
+
+/*    Не удаляем полностью текст, а ставим display:none (потому что в выпадающем списке текст тоже удаляется), чтобы избежать бага (не доходя до менюшки, кнопки уже подсвечиваются (~30-40px))      */
+.sidebar.close .text {
+  display: none;
+}
+
+/*   Включаем в выпадающем списке текст при закрытии navbar   
+.sidebar.close .dropdown-content .text {
+  opacity: 1;                                                         НЕ ПОНАДОБИЛОСЬ, Т.К. Я ПОСТАВИЛ DISPLAY:NONE 
+}
+*/
+
+.sidebar .text {
+  font-size: 16px;
+  font-weight: 540;
+  color: var(--text-color);
+  transition: var(--tran-03);
+  white-space: nowrap;
+  opacity: 1;
+}
+
+.sidebar .image {
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*   Увеличение лого при наведении   */
+.sidebar .image:hover {
+  transform: scale(1.2);
+  transition: var(--tran-04);
+}
+
+.sidebar li {
+  height: 50px;
+  margin-top: 10px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar li .icon-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  font-size: 20px;
+}
+
+.sidebar li .icon-menu,
+.sidebar li .text {
+  color: var(--text-color);
+  transition: var(--tran-02);
+}
+
+.sidebar header {
+  position: relative;
+}
+
+.sidebar .image-text img {
+  width: 40px;
+  border-radius: 6px;
+}
+
+.sidebar header .image-text {
+  display: flex;
+  align-items: center;
+}
+
+header .image-text .header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-text .name {
+  font-weight: 700;
+}
+
+.header-text .under-name {
+  margin-top: -2px;
+}
+
+.sidebar header .toggle {
+  position: absolute;
+  top: 50%;
+  right: -25px;
+  transform: translateY(-50%) rotate(180deg);
+  height: 25px;
+  width: 25px;
+  background: var(--primary-color);
+  align-items: center;
+  justify-content: center;
+  border-radius: 45%;
+  color: var(--sidebar-color);
+  font-size: 25px;
+  transition: var(--tran-03);
+}
+
+.sidebar.close header .toggle {
+  transform: translateY(-50%);
+}
+
+body.dark .sidebar header .toggle {
+  color: var(--text-color);
+}
+
+.sidebar .menu {
+  margin-top: 15px;
+}
+
+/*   Полоска под лого   */
+.sidebar .sidebar_divider {
+  margin-top: 30px;
+  width: 100%;
+  height: 1px;
+  align-items: center;
+  justify-items: center;
+  background: #695cfe;
+}
+
+/*      Расположение кнопок в навбаре       */
+.sidebar li a {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: var(--tran-04);
+}
+
+/*Цвет подсветки кнопок*/
+.sidebar li a:hover {
+  background: var(--primary-color);
+}
+
+/* Подсветка */
+.sidebar li a:hover .icon-menu,
+.sidebar li a:hover .text {
+  color: var(--sidebar-color);
+}
+
+/*   Тёмная подсветка кнопок    */
+body.dark .sidebar li a:hover .icon-menu,
+body.dark .sidebar li a:hover .text {
+  color: var(--text-color);
+}
+
+/*    Выпадающий список (Drop-Down content)    */
+
+.nav-dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none; /* Скрываем подменю по умолчанию */
+  position: absolute; /* Делаем абсолютное позиционирование */
+
+  padding: 10px;
+  left: 100%; /* Помещаем правее родителя */
+  background: var(--sidebar-color); /* Цвет фона подменю */
+  border: 1px solid;
+  border-color: var(--text-color);
+  border-radius: 10px; /* Рамка подменю */
+  z-index: 1; /* Обеспечиваем, чтобы меню было на переднем плане */
+}
+
+.dropdown-toggle:hover + .dropdown-content,
+.dropdown-content:hover {
+  display: block; /* Показать подменю при наведении */
+}
+
+/*    Размер подсветки и сама подсветка    */
+.sidebar .bottom-content .dropdown-content li {
+  height: 28px;
+  width: 180px;
+  margin-top: 10px;
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .bottom-content .dropdown-content li a {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: var(--tran-04);
+}
+
+/*         Цвета текста при наведении на кнопку в тёмной теме и светлой           */
+.sidebar .bottom-content .dropdown-content li a:hover {
+  color: var(--sidebar-color);
+}
+
+body.dark .sidebar .bottom-content .dropdown-content li a:hover {
+  color: var(--text-color);
+}
+
+/* .......  Dark mode and Light  ......  */
+.sidebar .menu-bar {
+  height: calc(100% - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.menu-bar .mode {
+  position: relative;
+  border-radius: 6px;
+  background: var(--primary-color-light);
+}
+
+.menu-bar .mode .moon-sun {
+  height: 50px;
+  width: 60px;
+  display: flex;
+  align-items: center;
+}
+
+.menu-bar .mode i {
+  position: absolute;
+  transition: var(--tran-03);
+}
+
+.menu-bar .mode i.sun {
+  opacity: 0;
+}
+
+body.dark .menu-bar .mode i.sun {
+  opacity: 1;
+}
+
+body.dark .menu-bar .mode i.moon {
+  opacity: 0;
+}
+
+.menu-bar .mode .toggle-switch {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-width: 60px;
+  cursor: pointer;
+  border-radius: 6px;
+  background: var(--primary-color-light);
+  transition: var(--tran-05);
+}
+
+.toggle-switch .switch {
+  position: relative;
+  height: 22px;
+  width: 44px;
+  border-radius: 25px;
+  background: var(--toggle-color);
+}
+
+.switch::before {
+  content: "";
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  background: var(--sidebar-color);
+  transition: var(--tran-03);
+}
+
+body.dark .switch::before {
+  left: 24px;
+}
+
+/*  ....  Рабочая область (dashboard)  ..... */
+
+.home-content {
+  position: relative;
+  height: 100vh;
+  left: 250px;
+  width: calc(100% - 250px);
+  background: var(--body-color);
+  transition: var(--tran-05);
+}
+
+.home-content .text {
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--text-color);
+  padding: 8px 40px;
+}
+
+.sidebar.close ~ .home-content {
+  left: 88px;
+  width: calc(100% - 88px);
+}
+
+/*              ТопНавбар на странице контента               */
+
+/*
+.home-content nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 80px;
+  width: 200px;
+
+  border-radius: 5% 0 0 80%;
+  background-color: var(--sidebar-color);
+  padding: 0 20px;
+}
+*/
+
+/*        Table        */
+
+/*.......Кнопки над таблицей и сама таблица (расположение таблицы на экране)...... */
+.home-content .table-content {
+  position: relative;
+  width: 80%;
+  top: 10%;
+  left: 10%;
+}
+
+.table-header {
+  display: flex; /* Используем Flexbox */
+  align-items: center; /* Вертикально центрируем элементы */
+  justify-content: end; /* выравнивание с конца таблицы */
+  gap: 40px; /*  расстояние между search-box и кнопками   */
+}
+
+.search {
+  padding: 7px;
+  display: flex;
+  margin-bottom: 10px; /* Добавляем отступ снизу от таблицы */
+  background: var(--primary-color-light);
+  border-radius: 15px;
+}
+
+.search input {
+  height: 20px;
+  width: 100%;
+  outline: none;
+  border: none;
+  color: var(--text-color);
+  background: var(--primary-color-light);
+}
+
+.search input[type="text"] {
+  padding-left: 10px;
+}
+
+.search .icon-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.search .search-button {
+  border: none;
+  background-color: var(--primary-color-light);
+  cursor: pointer;
+}
+
+.search .icon-search,
+.search .text {
+  color: var(--text-color);
+}
+
+.search .icon-search:hover {
+  transform: scale(1.2);
+  transition: var(--tran-04);
+}
+
+.table-button {
+  display: flex; /* Используем Flexbox для кнопок */
+  gap: 40px; /* Добавляем промежуток между кнопками */
+  margin-bottom: 10px;
+}
+
+.function-table {
+  display: flex;
+  justify-items: center;
+  border: none;
+  font-size: 27px;
+  border-radius: 10px;
+  background-color: var(--body-color);
+  cursor: pointer;
+}
+
+.function-table .icon-button {
+  color: var(--text-color);
+}
+
+/*Цвет подсветки кнопок*/
+.function-table:hover {
+  transition: var(--tran-04);
+  background: var(--primary-color);
+}
+
+/* Подсветка */
+.function-table:hover .icon-button {
+  color: var(--sidebar-color);
+  transition: var(--tran-04);
+}
+
+/*   Тёмная подсветка кнопок    */
+body.dark .function-table:hover .icon-button {
+  color: var(--text-color);
+  transition: var(--tran-04);
+}
+
+/* ..... Таблица  .... */
+.home-content .table {
+  width: 100%;
+  border: 15px solid var(--sidebar-color);
+  border-top: 10px solid var(--sidebar-color);
+  border-collapse: collapse; /* определяет границы столбцов и строк (отдельные или совмещённые) */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+/*  Бокс с название столбцов  */
+.home-content .table thead th {
+  padding: 10px 15px;
+  background: var(--body-color);
+  font-weight: 700; /*  жирность шрифта  */
+  font-size: 16px; /*  размер шрифта  */
+  color: var(--text-color); /*   Цвет шрифта   */
+  text-align: center;
+  border: none;
+  border-bottom: 5px solid var(--sidebar-color);
+}
+
+/*    Строки таблицы    */
+.home-content .table tbody td {
+  padding: 10px 15px;
+  background: var(--body-color);
+  font-size: 15px;
+  font-weight: 540;
+  color: var(--text-color);
+  text-align: center;
+  vertical-align: text-top;
+  border-left: 1px solid var(--text-color);
+  border-right: 1px solid var(--text-color);
+  border: none;
+  border-bottom: 5px solid var(--sidebar-color);
+  transition: var(--tran-02);
+}
+
+/* .....  Второй стиль таблицы (Нужно убрать background и border и border-bottom у строк таблицы ) .....  */
+
+.home-content .zebra {
+  width: 100%;
+  border: 15px solid var(--sidebar-color);
+  border-top: 10px solid var(--sidebar-color);
+  border-collapse: collapse; /* определяет границы столбцов и строк (отдельные или совмещённые) */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+/*  Бокс с название столбцов  */
+.home-content .zebra thead th {
+  padding: 10px 15px;
+  background: var(--body-color);
+  font-weight: 700; /*  жирность шрифта  */
+  font-size: 16px; /*  размер шрифта  */
+  color: var(--text-color); /*   Цвет шрифта   */
+  text-align: center;
+}
+
+/*    Строки таблицы    */
+.home-content .zebra tbody td {
+  padding: 10px 15px;
+  font-size: 15px;
+  font-weight: 540;
+  color: var(--text-color);
+  text-align: center;
+  vertical-align: text-top;
+  transition: var(--tran-05);
+}
+
+.zebra tbody tr:nth-child(odd) {
+  background: var(--sidebar-color);
+}
+.zebra tbody tr:nth-child(even) {
+  background: var(--body-color);
+}
